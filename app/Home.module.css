@@ -269,7 +269,6 @@
   font-size: 14px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 70px;
-  height: 40px; /* 버튼의 높이를 설정합니다 */
   display: flex;
   align-items: center;
   justify-content: center;
