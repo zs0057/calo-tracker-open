@@ -55,6 +55,8 @@
   transition: background-color 0.3s ease;
   color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .mealButton:hover {
@@ -267,5 +269,9 @@
   font-size: 14px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 70px;
-  white-space: nowrap; /* 추가된 속성 */
+  height: 40px; /* 버튼의 높이를 설정합니다 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
