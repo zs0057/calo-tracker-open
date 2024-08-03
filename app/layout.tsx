@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <meta property="og:title" content="칼로리 측정기"></meta>
       <meta property="og:type" content="website"></meta>
-      <meta property="og:description" content="공유시 보여질 설명"></meta>
+      <meta property="og:description" content="칼로리를 측정해보세요"></meta>
       <body className={inter.className}>{children}</body>
       <KakaoScript />
     </html>

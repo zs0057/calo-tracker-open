@@ -176,7 +176,7 @@ export default function Home() {
             </div>
             <div className={styles.textareaContainer}>
               <textarea
-                placeholder="설명을 입력하세요... 예시: 계란2개"
+                placeholder="설명을 입력하세요. 예시: 계란 2개"
                 className={styles.textarea}
                 value={textarea}
                 onChange={handleTextareaChange}

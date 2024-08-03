@@ -134,20 +134,20 @@
   border-radius: 5px;
   resize: none;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .submitButton {
   width: 100%;
   background-color: #f1a3bf;
   border: none;
-  padding: 15px;
+  padding: 12px;
   color: white;
   cursor: pointer;
   border-radius: 10px;
   text-align: center;
   font-size: 18px;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 .resultContainer {
