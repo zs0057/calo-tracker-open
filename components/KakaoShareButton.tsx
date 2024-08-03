@@ -11,21 +11,23 @@ type KakaoShareButtonProps = {
     items: string;
   };
   selectedImage: string | null;
+  uploadedImageUrl: string | null;
 };
 
 const KakaoShareButton = ({
   result,
   mealType,
   selectedImage,
+  uploadedImageUrl,
 }: KakaoShareButtonProps) => {
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  // const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
-  const uploadImage = async () => {
-    if (selectedImage) {
-      const imageUrl = await uploadImageToSupabase(selectedImage);
-      setUploadedImageUrl(imageUrl);
-    }
-  };
+  // const uploadImage = async () => {
+  //   if (selectedImage) {
+  //     const imageUrl = await uploadImageToSupabase(selectedImage);
+  //     setUploadedImageUrl(imageUrl);
+  //   }
+  // };
 
   const description = `# ${getMealTypeKorean(mealType)} ${result.items
     .split(", ")
@@ -33,7 +35,7 @@ const KakaoShareButton = ({
     .join(" ")}`;
 
   const handleShare = () => {
-    uploadImage();
+    // uploadImage();
     if (typeof window !== "undefined" && window.Kakao) {
       window.Kakao.Share.sendDefault({
         objectType: "feed",

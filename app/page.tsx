@@ -7,6 +7,7 @@ import styles from "./Home.module.css";
 import { estimateCal } from "@/lib/apiClient";
 import { getMealTypeKorean, resizeImage } from "@/lib/utils";
 import KakaoShareButton from "@/components/KakaoShareButton";
+import { uploadImageToSupabase } from "@/lib/uploadImage";
 
 export default function Home() {
   const [mealType, setMealType] = useState<string>("breakfast");
@@ -18,6 +19,14 @@ export default function Home() {
     total_calories: number;
     items: string;
   }>({ total_calories: 0, items: "" });
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+
+  const uploadImage = async () => {
+    if (selectedImage) {
+      const imageUrl = await uploadImageToSupabase(selectedImage);
+      setUploadedImageUrl(imageUrl);
+    }
+  };
 
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -87,6 +96,7 @@ export default function Home() {
       total_calories: res.total_calories,
       items: res.items,
     });
+    await uploadImage();
     setSubmitted(true);
     setLoading(false);
   };
@@ -220,6 +230,7 @@ export default function Home() {
                 result={result}
                 mealType={mealType}
                 selectedImage={selectedImage}
+                uploadedImageUrl={uploadedImageUrl}
               />
             </div>
           </div>
