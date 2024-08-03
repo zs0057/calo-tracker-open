@@ -20,16 +20,12 @@ const KakaoShareButton = ({
 }: KakaoShareButtonProps) => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    const uploadImage = async () => {
-      if (selectedImage) {
-        const imageUrl = await uploadImageToSupabase(selectedImage);
-        setUploadedImageUrl(imageUrl);
-      }
-    };
-
-    uploadImage();
-  }, [selectedImage]);
+  const uploadImage = async () => {
+    if (selectedImage) {
+      const imageUrl = await uploadImageToSupabase(selectedImage);
+      setUploadedImageUrl(imageUrl);
+    }
+  };
 
   const description = `# ${getMealTypeKorean(mealType)} ${result.items
     .split(", ")
@@ -37,6 +33,7 @@ const KakaoShareButton = ({
     .join(" ")}`;
 
   const handleShare = () => {
+    uploadImage();
     if (typeof window !== "undefined" && window.Kakao) {
       window.Kakao.Share.sendDefault({
         objectType: "feed",
