@@ -16,9 +16,10 @@ export default function Home() {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<{
+    ai_text: string;
     total_calories: number;
     items: string;
-  }>({ total_calories: 0, items: "" });
+  }>({ total_calories: 0, items: "", ai_text: "" });
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
   const uploadImage = async () => {
@@ -95,6 +96,7 @@ export default function Home() {
     setResult({
       total_calories: res.total_calories,
       items: res.items,
+      ai_text: res.ai_text,
     });
     await uploadImage();
     setSubmitted(true);
@@ -106,7 +108,7 @@ export default function Home() {
     setSelectedImage(null);
     setTextarea("");
     setSubmitted(false);
-    setResult({ total_calories: 0, items: "" });
+    setResult({ total_calories: 0, items: "", ai_text: "" });
   };
 
   return (
@@ -221,6 +223,10 @@ export default function Home() {
                   # {item}
                 </span>
               ))}
+            </div>
+            <div className={styles.aiText}>
+              {result.ai_text} 칼로리는 여성 1인분 기준으로 측정하여 부정확할 수
+              있습니다.
             </div>
             <div className={styles.actionButtons}>
               <button className={styles.resetButton} onClick={handleReset}>

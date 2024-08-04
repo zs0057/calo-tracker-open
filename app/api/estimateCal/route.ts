@@ -18,9 +18,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json(); // JSON 본문을 파싱
     const text = body.description;
     const base64Image = body.selectedImage;
-
+    console.log();
     const aiText = await openAiRequest(base64Image, text);
-
+    console.log(aiText);
     return NextResponse.json(aiText);
   } catch (error) {
     return NextResponse.json(

@@ -7,6 +7,7 @@ export interface FormDataType {
 const apiUrl = process.env.NEXT_PUBLIC_API_URL + "/api/estimateCal";
 
 export const estimateCal = async (formData: FormDataType) => {
+  console.log(JSON.stringify(formData));
   const response = await fetch(apiUrl, {
     method: "POST",
     headers: {
@@ -23,6 +24,6 @@ export const estimateCal = async (formData: FormDataType) => {
   const parseJson = JSON.parse(await response.json());
   const items = parseJson.items;
   const total_calories = parseJson.total_calories;
-
-  return { items, total_calories };
+  const ai_text = parseJson.ai_text;
+  return { items, total_calories, ai_text };
 };
