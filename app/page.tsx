@@ -224,9 +224,9 @@ export default function Home() {
                 </span>
               ))}
             </div>
-            <div className={styles.aiText}>
-              {result.ai_text} 칼로리는 여성 1인분 기준으로 측정하여 부정확할 수
-              있습니다.
+            <div className={styles.aiText}>{result.ai_text}</div>
+            <div className={styles.additionalInfo}>
+              칼로리는 여성 평균 1인분 기준으로 측정하였습니다.
             </div>
             <div className={styles.actionButtons}>
               <button className={styles.resetButton} onClick={handleReset}>
