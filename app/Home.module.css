@@ -15,7 +15,7 @@
 .header {
   font-family: Arial, sans-serif;
   margin: 0 auto;
-  max-width: 340px;
+  max-width: 320px;
   background-color: #f1a3bf;
   color: white;
   padding: 10px;
@@ -74,10 +74,10 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  width: 305px;
-  height: 305px;
+  width: 275px;
+  height: 275px;
   border: 2px solid #f1a3bf;
-  border-radius: 5px;
+  border-radius: 15px;
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -106,8 +106,8 @@
 
 .imagePreview {
   margin: 0 auto;
-  width: 305px;
-  height: 305px;
+  width: 275px;
+  height: 275px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -133,7 +133,7 @@
   height: 60px;
   padding: 10px;
   border: 2px solid #f1a3bf;
-  border-radius: 5px;
+  border-radius: 15px;
   resize: none;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   font-size: 18px;
@@ -260,16 +260,16 @@
 }
 
 .resetButton {
-  background-color: #f1a3bf;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  text-align: center;
-  font-size: 14px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 70px;
-  display: flex;
+  background-color: #f1a3bf; /* Equivalent to bg-light-pink */
+  color: white; /* text-white */
+  padding: 0.5rem 1rem; /* py-2 px-4 */
+  border-radius: 9999px; /* rounded-full */
+  cursor: pointer; /* cursor-pointer */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   white-space: nowrap;
