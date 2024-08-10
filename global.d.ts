@@ -2,6 +2,7 @@
 
 interface KakaoShare {
   sendDefault: (options: any) => void; // 적절한 옵션 타입을 정의합니다.
+  createCustomButton: (options: any) => void;
 }
 
 interface KakaoType {
