@@ -53,12 +53,15 @@ const Dashboard: React.FC = () => {
           console.error("Error signing in:", error);
         } else {
           console.log("Signed in successfully:", data);
+          router.push("/"); // Redirect to the root route after successful sign-in
         }
       } else {
         if (typeof session.user.email === "string") {
           kakaoEmailRef.current = session.user.email;
         }
+        router.push("/"); // Redirect to the root route if session already exists
       }
+
       if (kakaoEmailRef.current) {
         try {
           const currentData = await getMealCaloriesByDateAndEmail(
@@ -73,7 +76,7 @@ const Dashboard: React.FC = () => {
     };
 
     signInWithKakao();
-  }, []);
+  }, [router, date]); // Adding router and date to the dependency array
 
   useEffect(() => {
     const fetchDataAsync = async () => {
