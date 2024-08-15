@@ -42,7 +42,6 @@ export default function Home() {
           provider: "kakao",
           options: {
             scopes: "profile_image,account_email",
-            redirectTo: process.env.NEXT_PUBLIC_BASE_URL + "/",
           },
         });
 
@@ -60,7 +59,6 @@ export default function Home() {
     }
 
     signInWithKakao();
-    router.push("/");
   }, []);
 
   const uploadImage = async () => {
