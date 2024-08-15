@@ -60,6 +60,7 @@ export default function Home() {
     }
 
     signInWithKakao();
+    router.push("/");
   }, []);
 
   const uploadImage = async () => {
