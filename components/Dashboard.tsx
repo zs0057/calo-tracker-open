@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
           provider: "kakao",
           options: {
             scopes: "profile_image,account_email",
-            redirectTo: process.env.NEXT_PUBLIC_BASE_URL,
+            redirectTo: process.env.NEXT_PUBLIC_BASE_URL + "/",
           },
         });
 
@@ -54,13 +54,11 @@ const Dashboard: React.FC = () => {
           console.error("Error signing in:", error);
         } else {
           console.log("Signed in successfully:", data);
-          router.push("/"); // Redirect to the root route after successful sign-in
         }
       } else {
         if (typeof session.user.email === "string") {
           kakaoEmailRef.current = session.user.email;
         }
-        router.push("/"); // Redirect to the root route if session already exists
       }
 
       if (kakaoEmailRef.current) {
