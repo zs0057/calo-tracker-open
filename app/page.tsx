@@ -1,13 +1,19 @@
 "use client";
-
-import { FormDataType } from "@/lib/apiClient";
-import { useState, ChangeEvent } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./Home.module.css";
-import { estimateCal } from "@/lib/apiClient";
+import {
+  estimateCal,
+  FormDataType,
+  SaveFormDataType,
+  saveMeal,
+} from "@/lib/apiClient";
 import { getMealTypeKorean, resizeImage } from "@/lib/utils";
 import KakaoShareButton from "@/components/KakaoShareButton";
 import { uploadImageToSupabase } from "@/lib/uploadImage";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
+import useStore from "@/lib/store";
 
 export default function Home() {
   const [mealType, setMealType] = useState<string>("breakfast");
@@ -21,11 +27,45 @@ export default function Home() {
     items: string;
   }>({ total_calories: 0, items: "", ai_text: "" });
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const router = useRouter();
+  const { kakaoEmail, setkakaoEmail } = useStore();
+
+  useEffect(() => {
+    async function signInWithKakao() {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: "kakao",
+          options: {
+            scopes: "profile_image,account_email",
+          },
+        });
+
+        if (error) {
+          console.error("Error signing in:", error);
+        } else {
+          console.log("Signed in successfully:", data);
+        }
+      } else {
+        if (typeof session.user.email === "string") {
+          console.log(session.user.email);
+          setkakaoEmail(session.user.email);
+        }
+      }
+    }
+
+    signInWithKakao();
+  }, []);
 
   const uploadImage = async () => {
     if (selectedImage) {
       const imageUrl = await uploadImageToSupabase(selectedImage);
       setUploadedImageUrl(imageUrl);
+      return imageUrl;
     }
   };
 
@@ -98,7 +138,16 @@ export default function Home() {
       items: res.items,
       ai_text: res.ai_text,
     });
-    await uploadImage();
+    const imageUrl = await uploadImage();
+    const saveFormData: SaveFormDataType = {
+      kakaoEmail: kakaoEmail,
+      mealType: mealType,
+      imageUrl: imageUrl as string,
+      calorie: res.total_calories,
+      items: res.items,
+      ai_text: res.ai_text,
+    };
+    saveMeal(saveFormData);
     setSubmitted(true);
     setLoading(false);
   };
@@ -111,9 +160,25 @@ export default function Home() {
     setResult({ total_calories: 0, items: "", ai_text: "" });
   };
 
+  const handleReportClick = () => {
+    router.push("/report"); // '/report' 페이지로 이동
+  };
+
   return (
     <>
-      <header className={styles.header}>칼로리 측정</header>
+      <header className={styles.header}>
+        <div className={styles.title}>칼로리 측정</div>
+        <div className={styles.reportButton} onClick={handleReportClick}>
+          <Image
+            src="/calendar.png" // Image를 public 폴더에 위치한 것으로 가정
+            alt="레포트 아이콘"
+            width={24} // 아이콘의 너비
+            height={24} // 아이콘의 높이
+            color="#ffffff"
+          />
+        </div>
+      </header>
+
       <div className={styles.container}>
         {loading && (
           <div className={styles.loadingOverlay}>

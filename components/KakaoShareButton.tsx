@@ -28,11 +28,14 @@ const KakaoShareButton = ({
       // Kakao SDK가 로드되었는지 확인 후, 커스텀 버튼 생성
       window.Kakao.Share.createCustomButton({
         container: "#kakaotalk-sharing-btn",
-        templateId: 110932, // 실제 사용중인 템플릿 ID로 대체해야 합니다.
+        templateId: 111057, // 실제 사용중인 템플릿 ID로 대체해야 합니다.
         templateArgs: {
           title: `칼로리: ${result.total_calories} kcal`,
           description: description,
           imageUrl: uploadedImageUrl || "",
+          imageWidth: 200,
+          imageHeight: 125,
+          SC: "(200,125)",
         },
       });
     }
