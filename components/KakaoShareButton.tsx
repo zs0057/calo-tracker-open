@@ -15,10 +15,9 @@ type KakaoShareButtonProps = {
 
 const KakaoShareButton = ({
   result,
-  mealType,
   uploadedImageUrl,
 }: KakaoShareButtonProps) => {
-  const description = `# ${getMealTypeKorean(mealType)} ${result.items
+  const description = `${result.items
     .split(", ")
     .map((item) => `# ${item}`)
     .join(" ")}`;
@@ -34,8 +33,8 @@ const KakaoShareButton = ({
           description: description,
           imageUrl: uploadedImageUrl || "",
           imageWidth: 200,
-          imageHeight: 125,
-          SC: "(200,125)",
+          imageHeight: 200,
+          SC: "(200,200)",
         },
       });
     }

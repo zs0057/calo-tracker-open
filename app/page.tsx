@@ -1,6 +1,8 @@
 "use client";
+
 import { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
+import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
 import styles from "./Home.module.css";
 import {
   estimateCal,
@@ -14,6 +16,8 @@ import { uploadImageToSupabase } from "@/lib/uploadImage";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import useStore from "@/lib/store";
+import { checkAndInsertKakaoEmail } from "@/lib/checkUser";
+import Head from "next/head";
 
 export default function Home() {
   const [mealType, setMealType] = useState<string>("breakfast");
@@ -29,6 +33,32 @@ export default function Home() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const router = useRouter();
   const { kakaoEmail, setkakaoEmail } = useStore();
+  const [isClient, setIsClient] = useState(false);
+
+  // Steps for the Joyride tour
+  const steps: Step[] = [
+    {
+      target: '[data-tour="1"]', // Select the reportButton by class
+      content: "Hi1: This is where you can view your report.",
+      disableBeacon: true,
+    },
+    {
+      target: '[data-tour="2"]', // Use the data-tour attribute for inputContainer
+      content: "Hi2: Upload your meal image here.",
+    },
+    {
+      target: '[data-tour="3"]', // Use the data-tour attribute for textareaContainer
+      content: "Hi3: Describe your meal in this text area.",
+    },
+  ];
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { status } = data;
+    const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
+    if (finishedStatuses.includes(status)) {
+      // Do something after the tour ends
+    }
+  };
 
   useEffect(() => {
     async function signInWithKakao() {
@@ -54,6 +84,11 @@ export default function Home() {
         if (typeof session.user.email === "string") {
           console.log(session.user.email);
           setkakaoEmail(session.user.email);
+          // 함수 호출 예시
+          const check = await checkAndInsertKakaoEmail(session.user.email);
+          if (check == 0) {
+            setIsClient(true);
+          }
         }
       }
     }
@@ -166,14 +201,33 @@ export default function Home() {
 
   return (
     <>
+      {isClient && (
+        <Joyride
+          steps={steps}
+          callback={handleJoyrideCallback}
+          continuous={true}
+          scrollToFirstStep={true}
+          showProgress={false}
+          showSkipButton={true}
+          styles={{
+            options: {
+              zIndex: 10000,
+            },
+          }}
+        />
+      )}
       <header className={styles.header}>
         <div className={styles.title}>칼로리 측정</div>
-        <div className={styles.reportButton} onClick={handleReportClick}>
+        <div
+          className={styles.reportButton}
+          onClick={handleReportClick}
+          data-tour="1"
+        >
           <Image
-            src="/calendar.png" // Image를 public 폴더에 위치한 것으로 가정
+            src="/calendar.png"
             alt="레포트 아이콘"
-            width={24} // 아이콘의 너비
-            height={24} // 아이콘의 높이
+            width={24}
+            height={24}
             color="#ffffff"
           />
         </div>
@@ -187,41 +241,6 @@ export default function Home() {
         )}
         {!submitted ? (
           <>
-            <div className={styles.mealButtons}>
-              <button
-                className={`${styles.mealButton} ${
-                  mealType === "breakfast" ? styles.activeMeal : ""
-                }`}
-                onClick={() => setMealType("breakfast")}
-              >
-                아침
-              </button>
-              <button
-                className={`${styles.mealButton} ${
-                  mealType === "lunch" ? styles.activeMeal : ""
-                }`}
-                onClick={() => setMealType("lunch")}
-              >
-                점심
-              </button>
-              <button
-                className={`${styles.mealButton} ${
-                  mealType === "dinner" ? styles.activeMeal : ""
-                }`}
-                onClick={() => setMealType("dinner")}
-              >
-                저녁
-              </button>
-              <button
-                className={`${styles.mealButton} ${
-                  mealType === "snack" ? styles.activeMeal : ""
-                }`}
-                onClick={() => setMealType("snack")}
-              >
-                간식
-              </button>
-            </div>
-
             <div className={styles.inputContainer}>
               <input
                 type="file"
@@ -232,7 +251,11 @@ export default function Home() {
                 style={{ display: selectedImage ? "none" : "block" }}
               />
               {!selectedImage && (
-                <label htmlFor="file" className={styles.uploadButton}>
+                <label
+                  htmlFor="file"
+                  className={styles.uploadButton}
+                  data-tour="2"
+                >
                   이미지 업로드
                 </label>
               )}
@@ -251,15 +274,20 @@ export default function Home() {
                 </div>
               )}
             </div>
-            <div className={styles.textareaContainer}>
+            <div className={styles.textareaContainer} data-tour="3">
               <textarea
-                placeholder="설명을 입력하세요. 예시: 계란 2개"
+                id="textarea" // 텍스트 입력창에 id 추가
+                placeholder="계란 2개, 닭가슴살 100g"
                 className={styles.textarea}
                 value={textarea}
                 onChange={handleTextareaChange}
               ></textarea>
             </div>
-            <button className={styles.submitButton} onClick={handleSubmit}>
+            <button
+              id="submitButton" // 측정 버튼에 id 추가
+              className={styles.submitButton}
+              onClick={handleSubmit}
+            >
               측정
             </button>
           </>
@@ -306,6 +334,15 @@ export default function Home() {
             </div>
           </div>
         )}
+        <footer className={styles.footer}>
+          <Image
+            src="/banner.gif"
+            alt="Banner"
+            width={400}
+            height={400}
+            className={styles.bannerImage}
+          />
+        </footer>
       </div>
     </>
   );

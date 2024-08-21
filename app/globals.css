@@ -5,3 +5,15 @@
 :root {
   --light-pink: #f1a3bf;
 }
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 오버플로우로 인해 스크롤이 생기지 않도록 방지 */
+}
+
+#__next {
+  height: 100%; /* Next.js의 root element에 대한 높이 설정 */
+}
