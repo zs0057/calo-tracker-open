@@ -47,7 +47,7 @@ export default function Home() {
     },
     {
       target: '[data-tour="2"]', // Use the data-tour attribute for inputContainer
-      content: "음식이미지를 업로드 해주세요!",
+      content: "음식이미지를 업로드 해주세요!",
     },
     {
       target: '[data-tour="3"]', // Use the data-tour attribute for textareaContainer

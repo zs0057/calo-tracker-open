@@ -56,7 +56,7 @@ const KakaoShareButton = ({
       className="bg-light-pink text-white py-2 px-4 rounded-full cursor-pointer text-sm font-medium shadow-md"
       style={{ backgroundColor: "var(--light-pink)", display: "inline-block" }}
     >
-      인증하기
+      카카오톡 공유하기
     </div>
   );
 };
