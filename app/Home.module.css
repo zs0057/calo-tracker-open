@@ -313,7 +313,7 @@
 }
 
 .resetButton {
-  background-color: #f1a3bf; /* Equivalent to bg-light-pink */
+  background-color: #888; /* Equivalent to bg-light-pink */
   color: white; /* text-white */
   padding: 0.5rem 1rem; /* py-2 px-4 */
   border-radius: 9999px; /* rounded-full */
@@ -348,14 +348,26 @@
   margin-left: 5px;
 }
 
+.footerContainer {
+  max-width: 320px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
 .footer {
+  border: 1px solid #ddd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
   color: white;
-  padding: 15px;
   border-radius: 15px;
   font-size: 16px;
   font-weight: 700; /* Bold */
   max-width: 320px;
   margin: 0 auto;
+  margin-top: 15px;
 }

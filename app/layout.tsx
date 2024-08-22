@@ -22,7 +22,7 @@ export default function RootLayout({
         <meta property="og:title" content="칼로리 측정기"></meta>
         <meta property="og:type" content="website"></meta>
         <meta property="og:description" content="칼로리를 측정해보세요"></meta>
-        <script
+        {/* <script
           src="https://cdn.amplitude.com/libs/analytics-browser-2.10.0-min.js.gz"
           async
         ></script>
@@ -41,9 +41,9 @@ export default function RootLayout({
                 });
             `,
           }}
-        />
+        /> */}
       </head>
-      <GoogleAnalytics gaId="G-LZ5H0PZ44Z" />
+      {/* <GoogleAnalytics gaId="G-LZ5H0PZ44Z" /> */}
       <body className={inter.className}>
         {children}
         <KakaoScript />

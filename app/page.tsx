@@ -18,6 +18,9 @@ import { supabase } from "@/lib/supabaseClient";
 import useStore from "@/lib/store";
 import { checkAndInsertKakaoEmail } from "@/lib/checkUser";
 import Head from "next/head";
+import MixpanelComponent from "@/components/MixpanelComponent";
+import analytics from "@/lib/analytics";
+import { FaRedoAlt } from "react-icons/fa"; // restart 아이콘 추가
 
 export default function Home() {
   const [mealType, setMealType] = useState<string>("breakfast");
@@ -39,16 +42,17 @@ export default function Home() {
   const steps: Step[] = [
     {
       target: '[data-tour="1"]', // Select the reportButton by class
-      content: "Hi1: This is where you can view your report.",
+      content: "측정한 칼로리의 기록들을 볼 수 있어요!",
       disableBeacon: true,
     },
     {
       target: '[data-tour="2"]', // Use the data-tour attribute for inputContainer
-      content: "Hi2: Upload your meal image here.",
+      content: "음식이미지를 업로드 해주세요!",
     },
     {
       target: '[data-tour="3"]', // Use the data-tour attribute for textareaContainer
-      content: "Hi3: Describe your meal in this text area.",
+      content:
+        "정확한 측정을 위해 음식에 대한 설명을 적어주세요! (예시: 계란2개, 닭가슴살 150g)",
     },
   ];
 
@@ -94,6 +98,7 @@ export default function Home() {
     }
 
     signInWithKakao();
+    analytics.page();
   }, []);
 
   const uploadImage = async () => {
@@ -160,6 +165,7 @@ export default function Home() {
   };
 
   const handleSubmit = async () => {
+    analytics.track("측정버튼클릭");
     setLoading(true);
     const formData: FormDataType = {
       mealType,
@@ -196,25 +202,33 @@ export default function Home() {
   };
 
   const handleReportClick = () => {
+    analytics.track("레포트 이동");
     router.push("/report"); // '/report' 페이지로 이동
   };
-
+  const handleFooterClick = () => {
+    analytics.track("랜딩페이지 이동");
+    router.push("https://dietchallenge.vercel.app/?from=calory");
+  };
   return (
     <>
+      {/* <MixpanelComponent name="Search Page" /> */}
       {isClient && (
-        <Joyride
-          steps={steps}
-          callback={handleJoyrideCallback}
-          continuous={true}
-          scrollToFirstStep={true}
-          showProgress={false}
-          showSkipButton={true}
-          styles={{
-            options: {
-              zIndex: 10000,
-            },
-          }}
-        />
+        <div>
+          <MixpanelComponent name="Joyride" />
+          <Joyride
+            steps={steps}
+            callback={handleJoyrideCallback}
+            continuous={true}
+            scrollToFirstStep={true}
+            showProgress={false}
+            showSkipButton={true}
+            styles={{
+              options: {
+                zIndex: 10000,
+              },
+            }}
+          />
+        </div>
       )}
       <header className={styles.header}>
         <div className={styles.title}>칼로리 측정</div>
@@ -241,6 +255,41 @@ export default function Home() {
         )}
         {!submitted ? (
           <>
+            {" "}
+            <div className={styles.mealButtons}>
+              <button
+                className={`${styles.mealButton} ${
+                  mealType === "breakfast" ? styles.activeMeal : ""
+                }`}
+                onClick={() => setMealType("breakfast")}
+              >
+                아침
+              </button>
+              <button
+                className={`${styles.mealButton} ${
+                  mealType === "lunch" ? styles.activeMeal : ""
+                }`}
+                onClick={() => setMealType("lunch")}
+              >
+                점심
+              </button>
+              <button
+                className={`${styles.mealButton} ${
+                  mealType === "dinner" ? styles.activeMeal : ""
+                }`}
+                onClick={() => setMealType("dinner")}
+              >
+                저녁
+              </button>
+              <button
+                className={`${styles.mealButton} ${
+                  mealType === "snack" ? styles.activeMeal : ""
+                }`}
+                onClick={() => setMealType("snack")}
+              >
+                간식
+              </button>
+            </div>
             <div className={styles.inputContainer}>
               <input
                 type="file"
@@ -323,7 +372,7 @@ export default function Home() {
             </div>
             <div className={styles.actionButtons}>
               <button className={styles.resetButton} onClick={handleReset}>
-                다시하기
+                <FaRedoAlt /> {/* restart 아이콘 */}
               </button>
               <KakaoShareButton
                 result={result}
@@ -334,16 +383,18 @@ export default function Home() {
             </div>
           </div>
         )}
-        <footer className={styles.footer}>
-          <Image
-            src="/banner.gif"
-            alt="Banner"
-            width={400}
-            height={400}
-            className={styles.bannerImage}
-          />
-        </footer>
       </div>
+
+      <footer className={styles.footer} onClick={handleFooterClick}>
+        <Image
+          src="/banner.gif"
+          alt="Banner"
+          width={290}
+          height={100}
+          className={styles.bannerImage}
+          unoptimized={true}
+        />
+      </footer>
     </>
   );
 }

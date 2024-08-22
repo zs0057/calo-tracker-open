@@ -116,14 +116,17 @@
 }
 
 .footer {
+  border: 1px solid #ddd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
-  background-color: #f1a3bf;
   color: white;
-  padding: 15px;
   border-radius: 15px;
   font-size: 16px;
   font-weight: 700; /* Bold */
+  max-width: 340px;
+  margin: 0 auto;
+  margin-top: 15px;
 }
 
 .chart-container {

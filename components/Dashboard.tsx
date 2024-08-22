@@ -14,6 +14,7 @@ import { getMealCaloriesByDateAndEmail } from "@/lib/getCalorie";
 import { getWeeklyCalorie } from "@/lib/getWeeklyCalorie";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import analytics from "@/lib/analytics";
 
 type Content = {
   breakfast: number;
@@ -133,6 +134,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleImageClick = () => {
+    analytics.track("측정기이동");
     router.push("/"); // 루트 경로로 이동
   };
 
@@ -258,8 +260,16 @@ const Dashboard: React.FC = () => {
           </CSSTransition>
         </SwitchTransition>
       </main>
+
       <footer className={styles.footer}>
-        <div>다이어트 레포트</div>
+        <Image
+          src="/banner.gif"
+          alt="Banner"
+          width={290}
+          height={400}
+          className={styles.bannerImage}
+          unoptimized={true}
+        />
       </footer>
     </div>
   );

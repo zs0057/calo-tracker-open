@@ -8,8 +8,40 @@ interface KakaoShare {
 interface KakaoType {
   init: (appKey: string) => void;
   Share: KakaoShare;
+  isInitialized: () => boolean;
+  Link: any;
 }
 
 interface Window {
   Kakao: KakaoType;
+}
+
+declare module "@analytics/mixpanel" {
+  interface MixpanelPluginOptions {
+    token: string;
+  }
+
+  function mixpanelPlugin(options: MixpanelPluginOptions): any;
+
+  export default mixpanelPlugin;
+}
+
+declare module "@analytics/amplitude" {
+  interface AmplitudePluginOptions {
+    apiKey: string;
+  }
+
+  function amplitudePlugin(options: AmplitudePluginOptions): any;
+
+  export default amplitudePlugin;
+}
+
+declare module "@analytics/google-analytics" {
+  interface GoogleAnalyticsPluginOptions {
+    trackingId: string;
+  }
+
+  function googleAnalytics(options: GoogleAnalyticsPluginOptions): any;
+
+  export default googleAnalytics;
 }
