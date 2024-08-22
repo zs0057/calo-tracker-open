@@ -37,7 +37,7 @@ const KakaoShareButton = ({
     analytics.track("공유버튼클릭");
     if (window.Kakao) {
       window.Kakao.Link.sendCustom({
-        templateId: 111057, // 실제 사용중인 템플릿 ID로 대체해야 합니다.
+        templateId: 110972, // 실제 사용중인 템플릿 ID로 대체해야 합니다.
         templateArgs: {
           title: `칼로리: ${result.total_calories} kcal`,
           description: description,
