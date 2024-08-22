@@ -11,7 +11,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* 오버플로우로 인해 스크롤이 생기지 않도록 방지 */
+  overflow: auto; /* 오버플로우로 인해 스크롤이 생기지 않도록 방지 */
 }
 
 #__next {
