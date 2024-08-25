@@ -5,8 +5,8 @@ import amplitudePlugin from "@analytics/amplitude";
 import googleAnalytics from "@analytics/google-analytics";
 const mixpanelToken = process.env.NEXT_PUBLIC_MIXPANEL_ID || "";
 const amplitudeApiKey = process.env.NEXT_PUBLIC_AMPLITUDE_ID || "";
-const googleAnalyticsId = process.env.NEXT_PUBLIC_MIXPANEL_ID || "";
-
+const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || "";
+console.log(googleAnalyticsId);
 const analytics = Analytics({
   app: "my-app", // 애플리케이션 이름
   version: "1.0.0", // 애플리케이션 버전
