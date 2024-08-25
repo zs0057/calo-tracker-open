@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
 import styles from "./Home.module.css";
@@ -260,8 +260,9 @@ export default function Home() {
 
   return (
     <>
-      {/* <MixpanelComponent name="Search Page" /> */}
-      {/* {isClient && (
+      <Suspense>
+        {/* <MixpanelComponent name="Search Page" /> */}
+        {/* {isClient && (
         <div>
           <MixpanelComponent name="Joyride" />
           <Joyride
@@ -279,89 +280,120 @@ export default function Home() {
           />
         </div>
       )} */}
-      <header className={styles.header}>
-        <div className={styles.title}>칼로리 측정</div>
-        <div
-          className={styles.reportButton}
-          onClick={handleReportClick}
-          data-tour="1"
-        >
-          <Image
-            src="/calendar.png"
-            alt="레포트 아이콘"
-            width={24}
-            height={24}
-            color="#ffffff"
-          />
-        </div>
-      </header>
-
-      <div className={styles.container}>
-        {loading && (
-          <div className={styles.loadingOverlay}>
-            <div className={styles.spinner}></div>
+        <header className={styles.header}>
+          <div className={styles.title}>칼로리 측정</div>
+          <div
+            className={styles.reportButton}
+            onClick={handleReportClick}
+            data-tour="1"
+          >
+            <Image
+              src="/calendar.png"
+              alt="레포트 아이콘"
+              width={24}
+              height={24}
+              color="#ffffff"
+            />
           </div>
-        )}
-        {!submitted ? (
-          <>
-            {" "}
-            <div className={styles.mealButtons}>
-              <button
-                className={`${styles.mealButton} ${
-                  mealType === "breakfast" ? styles.activeMeal : ""
-                }`}
-                onClick={() => setMealType("breakfast")}
-              >
-                아침
-              </button>
-              <button
-                className={`${styles.mealButton} ${
-                  mealType === "lunch" ? styles.activeMeal : ""
-                }`}
-                onClick={() => setMealType("lunch")}
-              >
-                점심
-              </button>
-              <button
-                className={`${styles.mealButton} ${
-                  mealType === "dinner" ? styles.activeMeal : ""
-                }`}
-                onClick={() => setMealType("dinner")}
-              >
-                저녁
-              </button>
-              <button
-                className={`${styles.mealButton} ${
-                  mealType === "snack" ? styles.activeMeal : ""
-                }`}
-                onClick={() => setMealType("snack")}
-              >
-                간식
-              </button>
+        </header>
+
+        <div className={styles.container}>
+          {loading && (
+            <div className={styles.loadingOverlay}>
+              <div className={styles.spinner}></div>
             </div>
-            <div className={styles.inputContainer}>
-              <input
-                type="file"
-                accept="image/*,image/heic,image/heif"
-                className={styles.fileInput}
-                id="file"
-                onChange={handleImageChange}
-                style={{ display: selectedImage ? "none" : "block" }}
-              />
-              {!selectedImage && (
-                <label
-                  htmlFor="file"
-                  className={styles.uploadButton}
-                  data-tour="2"
+          )}
+          {!submitted ? (
+            <>
+              {" "}
+              <div className={styles.mealButtons}>
+                <button
+                  className={`${styles.mealButton} ${
+                    mealType === "breakfast" ? styles.activeMeal : ""
+                  }`}
+                  onClick={() => setMealType("breakfast")}
                 >
-                  이미지 업로드
-                </label>
-              )}
+                  아침
+                </button>
+                <button
+                  className={`${styles.mealButton} ${
+                    mealType === "lunch" ? styles.activeMeal : ""
+                  }`}
+                  onClick={() => setMealType("lunch")}
+                >
+                  점심
+                </button>
+                <button
+                  className={`${styles.mealButton} ${
+                    mealType === "dinner" ? styles.activeMeal : ""
+                  }`}
+                  onClick={() => setMealType("dinner")}
+                >
+                  저녁
+                </button>
+                <button
+                  className={`${styles.mealButton} ${
+                    mealType === "snack" ? styles.activeMeal : ""
+                  }`}
+                  onClick={() => setMealType("snack")}
+                >
+                  간식
+                </button>
+              </div>
+              <div className={styles.inputContainer}>
+                <input
+                  type="file"
+                  accept="image/*,image/heic,image/heif"
+                  className={styles.fileInput}
+                  id="file"
+                  onChange={handleImageChange}
+                  style={{ display: selectedImage ? "none" : "block" }}
+                />
+                {!selectedImage && (
+                  <label
+                    htmlFor="file"
+                    className={styles.uploadButton}
+                    data-tour="2"
+                  >
+                    이미지 업로드
+                  </label>
+                )}
+                {selectedImage && (
+                  <div
+                    className={styles.imagePreview}
+                    onClick={() => document.getElementById("file")?.click()}
+                  >
+                    <Image
+                      src={selectedImage}
+                      alt="Selected"
+                      className={styles.image}
+                      width={320}
+                      height={320}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className={styles.textareaContainer} data-tour="3">
+                <textarea
+                  id="textarea" // 텍스트 입력창에 id 추가
+                  placeholder="계란 2개, 닭가슴살 100g"
+                  className={styles.textarea}
+                  value={textarea}
+                  onChange={handleTextareaChange}
+                ></textarea>
+              </div>
+              <button
+                id="submitButton" // 측정 버튼에 id 추가
+                className={styles.submitButton}
+                onClick={handleSubmit}
+              >
+                측정
+              </button>
+            </>
+          ) : (
+            <div className={styles.resultContainer}>
               {selectedImage && (
-                <div
-                  className={styles.imagePreview}
-                  onClick={() => document.getElementById("file")?.click()}
-                >
+                <div className={styles.imagePreview}>
                   <Image
                     src={selectedImage}
                     alt="Selected"
@@ -371,79 +403,49 @@ export default function Home() {
                   />
                 </div>
               )}
-            </div>
-            <div className={styles.textareaContainer} data-tour="3">
-              <textarea
-                id="textarea" // 텍스트 입력창에 id 추가
-                placeholder="계란 2개, 닭가슴살 100g"
-                className={styles.textarea}
-                value={textarea}
-                onChange={handleTextareaChange}
-              ></textarea>
-            </div>
-            <button
-              id="submitButton" // 측정 버튼에 id 추가
-              className={styles.submitButton}
-              onClick={handleSubmit}
-            >
-              측정
-            </button>
-          </>
-        ) : (
-          <div className={styles.resultContainer}>
-            {selectedImage && (
-              <div className={styles.imagePreview}>
-                <Image
-                  src={selectedImage}
-                  alt="Selected"
-                  className={styles.image}
-                  width={320}
-                  height={320}
+              <div className={styles.calorie}>
+                Calorie: {result.total_calories} kcal
+              </div>
+              <div className={styles.tagContainer}>
+                <span className={styles.tag}>
+                  # {getMealTypeKorean(mealType)}
+                </span>
+                {result.items.split(", ").map((item, index) => (
+                  <span key={index} className={styles.tag}>
+                    # {item}
+                  </span>
+                ))}
+              </div>
+              <div className={styles.aiText}>{result.ai_text}</div>
+              <div className={styles.additionalInfo}>
+                칼로리는 여성 평균 1인분 기준으로 측정하였습니다.
+              </div>
+              <div className={styles.actionButtons}>
+                <button className={styles.resetButton} onClick={handleReset}>
+                  <FaRedoAlt /> {/* restart 아이콘 */}
+                </button>
+                <KakaoShareButton
+                  result={result}
+                  mealType={mealType}
+                  selectedImage={selectedImage}
+                  uploadedImageUrl={uploadedImageUrl}
                 />
               </div>
-            )}
-            <div className={styles.calorie}>
-              Calorie: {result.total_calories} kcal
             </div>
-            <div className={styles.tagContainer}>
-              <span className={styles.tag}>
-                # {getMealTypeKorean(mealType)}
-              </span>
-              {result.items.split(", ").map((item, index) => (
-                <span key={index} className={styles.tag}>
-                  # {item}
-                </span>
-              ))}
-            </div>
-            <div className={styles.aiText}>{result.ai_text}</div>
-            <div className={styles.additionalInfo}>
-              칼로리는 여성 평균 1인분 기준으로 측정하였습니다.
-            </div>
-            <div className={styles.actionButtons}>
-              <button className={styles.resetButton} onClick={handleReset}>
-                <FaRedoAlt /> {/* restart 아이콘 */}
-              </button>
-              <KakaoShareButton
-                result={result}
-                mealType={mealType}
-                selectedImage={selectedImage}
-                uploadedImageUrl={uploadedImageUrl}
-              />
-            </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
 
-      <footer className={styles.footer} onClick={handleFooterClick}>
-        <Image
-          src="/banner.gif"
-          alt="Banner"
-          width={290}
-          height={100}
-          className={styles.bannerImage}
-          unoptimized={true}
-        />
-      </footer>
+        <footer className={styles.footer} onClick={handleFooterClick}>
+          <Image
+            src="/banner.gif"
+            alt="Banner"
+            width={290}
+            height={100}
+            className={styles.bannerImage}
+            unoptimized={true}
+          />
+        </footer>
+      </Suspense>
     </>
   );
 }
