@@ -257,7 +257,6 @@ export default function Home() {
 
   return (
     <>
-      {/* <MixpanelComponent name="Search Page" /> */}
       {/* {isClient && (
         <div>
           <MixpanelComponent name="Joyride" />

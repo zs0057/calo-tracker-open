@@ -5,7 +5,8 @@ import KakaoScript from "@/components/KakaoScript";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
 import { useEffect } from "react";
-
+import dotenv from "dotenv";
+dotenv.config();
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
