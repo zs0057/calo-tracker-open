@@ -37,7 +37,6 @@ export default function Home() {
   const router = useRouter();
   const { kakaoEmail, setkakaoEmail } = useStore();
   const [isClient, setIsClient] = useState(false);
-  const searchParams = useSearchParams();
 
   // Steps for the Joyride tour
   const steps: Step[] = [
@@ -96,22 +95,29 @@ export default function Home() {
     }
   }
 
+  const searchParams = useSearchParams();
+
   useEffect(() => {
-    // 페이지 로드 시 로컬 스토리지에서 값을 불러옴
-    const storedMealType = localStorage.getItem("mealType");
-    const storedImage = localStorage.getItem("selectedImage");
-    const storedDescription = localStorage.getItem("description");
+    if (typeof window !== "undefined") {
+      // 페이지 로드 시 로컬 스토리지에서 값을 불러옴
+      const storedMealType = localStorage.getItem("mealType");
+      const storedImage = localStorage.getItem("selectedImage");
+      const storedDescription = localStorage.getItem("description");
 
-    if (storedMealType) setMealType(storedMealType);
-    if (storedImage) setSelectedImage(storedImage);
-    if (storedDescription) setTextarea(storedDescription);
+      if (storedMealType) setMealType(storedMealType);
+      if (storedImage) setSelectedImage(storedImage);
+      if (storedDescription) setTextarea(storedDescription);
 
-    analytics.page();
-    const utmSource = searchParams.get("utm_source");
-    if (utmSource) {
-      localStorage.setItem("utm_source", utmSource);
+      analytics.page();
+
+      if (searchParams) {
+        const utmSource = searchParams.get("utm_source");
+        if (utmSource) {
+          localStorage.setItem("utm_source", utmSource);
+        }
+      }
     }
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     // mealType, selectedImage, description이 변경될 때마다 로컬 스토리지에 저장
