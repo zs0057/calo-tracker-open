@@ -26,6 +26,7 @@
     "dotenv": "^16.4.5",
     "heic2any": "^0.0.4",
     "mixpanel-browser": "^2.55.0",
+    "mixpanel-node": "^0.0.17",
     "next": "14.2.5",
     "next-cors": "^1.0.0",
     "openai": "^4.54.0",
