@@ -8,14 +8,14 @@ const analytics = Analytics({
   version: "1.0.0", // 애플리케이션 버전
   plugins: [
     mixpanelPlugin({
-      token: "d3bfa0fbaf36efc0214ad29ea84a25e9", // Mixpanel 프로젝트 토큰
+      token: process.env.MIXPENEL_ID as string, // Mixpanel 프로젝트 토큰
     }) as any,
     amplitudePlugin({
-      apiKey: "963718076ebf081c31c2c37cd75e8583", // Amplitude API 키
+      apiKey: process.env.AMPLITUDE_ID as string, // Amplitude API 키
     }) as any,
-    // googleAnalytics({
-    //   trackingId: "G-LZ5H0PZ44Z", // Google Analytics 추적 ID
-    // }) as any,
+    googleAnalytics({
+      measurementIds: [process.env.GOOGLE_ANALYTICS_ID as string],
+    }),
   ],
 });
 

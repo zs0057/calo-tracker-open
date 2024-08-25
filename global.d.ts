@@ -38,7 +38,7 @@ declare module "@analytics/amplitude" {
 
 declare module "@analytics/google-analytics" {
   interface GoogleAnalyticsPluginOptions {
-    trackingId: string;
+    measurementIds: string[];
   }
 
   function googleAnalytics(options: GoogleAnalyticsPluginOptions): any;

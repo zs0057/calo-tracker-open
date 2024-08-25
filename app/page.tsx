@@ -13,7 +13,7 @@ import {
 import { getMealTypeKorean, resizeImage } from "@/lib/utils";
 import KakaoShareButton from "@/components/KakaoShareButton";
 import { uploadImageToSupabase } from "@/lib/uploadImage";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import useStore from "@/lib/store";
 import { checkAndInsertKakaoEmail } from "@/lib/checkUser";
@@ -37,6 +37,7 @@ export default function Home() {
   const router = useRouter();
   const { kakaoEmail, setkakaoEmail } = useStore();
   const [isClient, setIsClient] = useState(false);
+  const searchParams = useSearchParams();
 
   // Steps for the Joyride tour
   const steps: Step[] = [
@@ -56,50 +57,68 @@ export default function Home() {
     },
   ];
 
-  const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status } = data;
-    const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
-    if (finishedStatuses.includes(status)) {
-      // Do something after the tour ends
-    }
-  };
+  // const handleJoyrideCallback = (data: CallBackProps) => {
+  //   const { status } = data;
+  //   const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
+  //   if (finishedStatuses.includes(status)) {
+  //     // Do something after the tour ends
+  //   }
+  // };
+  async function signInWithKakao() {
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
 
-  useEffect(() => {
-    async function signInWithKakao() {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
+    if (!session) {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "kakao",
+        options: {
+          scopes: "profile_image,account_email",
+        },
+      });
 
-      if (!session) {
-        const { data, error } = await supabase.auth.signInWithOAuth({
-          provider: "kakao",
-          options: {
-            scopes: "profile_image,account_email",
-          },
-        });
-
-        if (error) {
-          console.error("Error signing in:", error);
-        } else {
-          console.log("Signed in successfully:", data);
-        }
+      if (error) {
+        console.error("Error signing in:", error);
       } else {
-        if (typeof session.user.email === "string") {
-          console.log(session.user.email);
-          setkakaoEmail(session.user.email);
-          // 함수 호출 예시
-          const check = await checkAndInsertKakaoEmail(session.user.email);
-          if (check == 0) {
-            setIsClient(true);
-          }
+        console.log("Signed in successfully:", data);
+      }
+    } else {
+      if (typeof session.user.email === "string") {
+        console.log(session.user.email);
+        setkakaoEmail(session.user.email);
+        // 함수 호출 예시
+        const check = await checkAndInsertKakaoEmail(session.user.email);
+        if (check == 0) {
+          setIsClient(true);
         }
       }
     }
+  }
 
-    signInWithKakao();
+  useEffect(() => {
+    // 페이지 로드 시 로컬 스토리지에서 값을 불러옴
+    const storedMealType = localStorage.getItem("mealType");
+    const storedImage = localStorage.getItem("selectedImage");
+    const storedDescription = localStorage.getItem("description");
+
+    if (storedMealType) setMealType(storedMealType);
+    if (storedImage) setSelectedImage(storedImage);
+    if (storedDescription) setTextarea(storedDescription);
+
     analytics.page();
+    const utmSource = searchParams.get("utm_source");
+    if (utmSource) {
+      localStorage.setItem("utm_source", utmSource);
+    }
   }, []);
+
+  useEffect(() => {
+    // mealType, selectedImage, description이 변경될 때마다 로컬 스토리지에 저장
+    localStorage.setItem("mealType", mealType);
+    if (selectedImage) localStorage.setItem("selectedImage", selectedImage);
+    localStorage.setItem("description", textarea);
+  }, [mealType, selectedImage, textarea]);
 
   const uploadImage = async () => {
     if (selectedImage) {
@@ -166,6 +185,7 @@ export default function Home() {
 
   const handleSubmit = async () => {
     analytics.track("측정버튼클릭");
+    await signInWithKakao();
     setLoading(true);
     const formData: FormDataType = {
       mealType,
@@ -191,6 +211,9 @@ export default function Home() {
     saveMeal(saveFormData);
     setSubmitted(true);
     setLoading(false);
+    localStorage.removeItem("mealType");
+    localStorage.removeItem("selectedImage");
+    localStorage.removeItem("description");
   };
 
   const handleReset = () => {
@@ -205,14 +228,34 @@ export default function Home() {
     analytics.track("레포트 이동");
     router.push("/report"); // '/report' 페이지로 이동
   };
+
   const handleFooterClick = () => {
+    // 로컬 스토리지에서 utm_source 값 가져오기
+    const utmSource = localStorage.getItem("utm_source");
+
+    // 기본 URL 설정
+    let url = "https://dietchallenge.vercel.app/?from=calory";
+
+    // utm_source가 존재하면 쿼리 스트링에 추가
+    if (utmSource) {
+      url += `&utm_source=${utmSource}`;
+
+      // router.push 이후 로컬 스토리지에서 utm_source 삭제
+      router.push(url);
+      localStorage.removeItem("utm_source");
+    } else {
+      // utm_source가 없으면 그냥 이동
+      router.push(url);
+    }
+
+    // 이벤트 트래킹
     analytics.track("랜딩페이지 이동");
-    router.push("https://dietchallenge.vercel.app/?from=calory");
   };
+
   return (
     <>
       {/* <MixpanelComponent name="Search Page" /> */}
-      {isClient && (
+      {/* {isClient && (
         <div>
           <MixpanelComponent name="Joyride" />
           <Joyride
@@ -229,7 +272,7 @@ export default function Home() {
             }}
           />
         </div>
-      )}
+      )} */}
       <header className={styles.header}>
         <div className={styles.title}>칼로리 측정</div>
         <div
