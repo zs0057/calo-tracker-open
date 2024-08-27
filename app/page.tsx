@@ -84,14 +84,15 @@ export default function Home() {
       }
     } else {
       if (typeof session.user.email === "string") {
-        console.log(session.user.email);
         setkakaoEmail(session.user.email);
+        console.log("session: ", session.user.email);
         // 함수 호출 예시
         const check = await checkAndInsertKakaoEmail(session.user.email);
         if (check == 0) {
           setIsClient(true);
         }
       }
+      return session.user.email;
     }
   }
 
@@ -188,13 +189,20 @@ export default function Home() {
 
   const handleSubmit = async () => {
     analytics.track("측정버튼클릭");
-    await signInWithKakao();
+
+    const email = await signInWithKakao();
+
+    if (!email) {
+      console.error("이메일을 가져오지 못했습니다.");
+      return;
+    }
     setLoading(true);
     const formData: FormDataType = {
       mealType,
       selectedImage: selectedImage,
       description: textarea,
     };
+    console.log("submit: ", email);
 
     const res = await estimateCal(formData);
     setResult({
@@ -204,7 +212,7 @@ export default function Home() {
     });
     const imageUrl = await uploadImage();
     const saveFormData: SaveFormDataType = {
-      kakaoEmail: kakaoEmail,
+      kakaoEmail: email as string,
       mealType: mealType,
       imageUrl: imageUrl as string,
       calorie: res.total_calories,
