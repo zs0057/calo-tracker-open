@@ -448,6 +448,9 @@ export default function Home() {
           unoptimized={true}
         />
       </footer>
+      <div className="text-center text-gray-400 mt-0.5 text-xs">
+        해당 챌린지에서 챌린저들과 같이 감량해 도전해보세요
+      </div>
     </>
   );
 }
