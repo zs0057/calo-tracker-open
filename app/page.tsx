@@ -133,6 +133,7 @@ export default function Home() {
   };
 
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    analytics.track("이미지 선택");
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       let convertedImage: string | ArrayBuffer | null = null;
@@ -265,24 +266,6 @@ export default function Home() {
 
   return (
     <>
-      {/* {isClient && (
-        <div>
-          <MixpanelComponent name="Joyride" />
-          <Joyride
-            steps={steps}
-            callback={handleJoyrideCallback}
-            continuous={true}
-            scrollToFirstStep={true}
-            showProgress={false}
-            showSkipButton={true}
-            styles={{
-              options: {
-                zIndex: 10000,
-              },
-            }}
-          />
-        </div>
-      )} */}
       <header className={styles.header}>
         <div className={styles.title}>칼로리 측정</div>
         <div
