@@ -68,6 +68,7 @@ export default function Home() {
     if (selectedImage) {
       const imageUrl = await uploadImageToSupabase(selectedImage);
       setUploadedImageUrl(imageUrl);
+      analytics.track("이미지 선택");
       return imageUrl;
     }
   };
@@ -159,6 +160,7 @@ export default function Home() {
     localStorage.removeItem("mealType");
     localStorage.removeItem("selectedImage");
     localStorage.removeItem("description");
+    analytics.track("측정완료");
   };
 
   const handleReset = () => {
