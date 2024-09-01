@@ -21,6 +21,7 @@ import Head from "next/head";
 import MixpanelComponent from "@/components/MixpanelComponent";
 import analytics from "@/lib/analytics";
 import { FaRedoAlt } from "react-icons/fa"; // restart 아이콘 추가
+import BottomBar from "@/components/common/BottomBar";
 
 export default function Home() {
   const [mealType, setMealType] = useState<string>("breakfast");
@@ -35,6 +36,66 @@ export default function Home() {
   }>({ total_calories: 0, items: "", ai_text: "" });
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const router = useRouter();
+  const { kakaoEmail, setkakaoEmail } = useStore();
+  const [isClient, setIsClient] = useState(false);
+
+  // Steps for the Joyride tour
+  const steps: Step[] = [
+    {
+      target: '[data-tour="1"]', // Select the reportButton by class
+      content: "측정한 칼로리의 기록들을 볼 수 있어요!",
+      disableBeacon: true,
+    },
+    {
+      target: '[data-tour="2"]', // Use the data-tour attribute for inputContainer
+      content: "음식이미지를 업로드 해주세요!",
+    },
+    {
+      target: '[data-tour="3"]', // Use the data-tour attribute for textareaContainer
+      content:
+        "정확한 측정을 위해 음식에 대한 설명을 적어주세요! (예시: 계란2개, 닭가슴살 150g)",
+    },
+  ];
+
+  // const handleJoyrideCallback = (data: CallBackProps) => {
+  //   const { status } = data;
+  //   const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
+  //   if (finishedStatuses.includes(status)) {
+  //     // Do something after the tour ends
+  //   }
+  // };
+  async function signInWithKakao() {
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "kakao",
+        options: {
+          scopes: "profile_image,account_email",
+        },
+      });
+
+      if (error) {
+        console.error("Error signing in:", error);
+      } else {
+        console.log("Signed in successfully:", data);
+      }
+    } else {
+      if (typeof session.user.email === "string") {
+        setkakaoEmail(session.user.email);
+        console.log("session: ", session.user.email);
+        // 함수 호출 예시
+        const check = await checkAndInsertKakaoEmail(session.user.email);
+        if (check == 0) {
+          setIsClient(true);
+        }
+      }
+      return session.user.email;
+    }
+  }
 
   useEffect(() => {
     // 클라이언트 사이드에서만 실행
@@ -131,12 +192,19 @@ export default function Home() {
   const handleSubmit = async () => {
     analytics.track("측정버튼클릭");
 
+    const email = await signInWithKakao();
+
+    if (!email) {
+      console.error("이메일을 가져오지 못했습니다.");
+      return;
+    }
     setLoading(true);
     const formData: FormDataType = {
       mealType,
       selectedImage: selectedImage,
       description: textarea,
     };
+    console.log("submit: ", email);
 
     const res = await estimateCal(formData);
     setResult({
@@ -146,7 +214,7 @@ export default function Home() {
     });
     const imageUrl = await uploadImage();
     const saveFormData: SaveFormDataType = {
-      kakaoEmail: "" as string,
+      kakaoEmail: email as string,
       mealType: mealType,
       imageUrl: imageUrl as string,
       calorie: res.total_calories,
@@ -193,11 +261,23 @@ export default function Home() {
   };
 
   return (
-    <>
-      <header className={styles.header}>
-        <div className={styles.title}>칼로리 측정</div>
-      </header>
-
+    <div className="bg-[#F6F8F9] rounded-lg h-screen max-w-96 mx-auto pt-2">
+      <footer
+        className="border border-gray-300 shadow-sm flex justify-center items-center text-white rounded-2xl font-bold text-base max-w-[345px] mx-auto  bg-white"
+        onClick={handleFooterClick}
+      >
+        <Image
+          src="/banner.gif"
+          alt="Banner"
+          width={290}
+          height={100}
+          className="rounded-lg"
+          unoptimized={true}
+        />
+      </footer>
+      <div className="text-center text-gray-400 mt-0.5 text-xs mb-4">
+        해당 챌린지에서 챌린저들과 같이 감량해 도전해보세요
+      </div>
       <div className={styles.container}>
         {loading && (
           <div className={styles.loadingOverlay}>
@@ -346,9 +426,12 @@ export default function Home() {
           unoptimized={true}
         />
       </footer>
-      <div className="text-center text-gray-400 mt-0.5 text-xs">
+      {/* <div className="text-center text-gray-400 mt-0.5 text-xs">
         해당 챌린지에서 챌린저들과 같이 감량해 도전해보세요
+      </div> */}
+      <div className="pb-20">
+        <BottomBar />
       </div>
-    </>
+    </div>
   );
 }
