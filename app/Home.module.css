@@ -184,13 +184,13 @@
 .textarea {
   width: 100%;
   max-width: 285px;
-  height: 60px;
+  height: 100px;
   padding: 10px;
   border: 2px solid #f1a3bf;
   border-radius: 15px;
   resize: none;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .submitButton {
