@@ -340,9 +340,10 @@ export default function Home() {
           정보, 레시피, 운동 팁도 공유할 수 있습니다!
         </p>
         <button
-          onClick={() =>
-            window.open("https://open.kakao.com/o/gMTwcQug", "_blank")
-          }
+          onClick={() => {
+            analytics.track("옾챗페이지 이동"); // 옾챗페이지이동 트래킹 추가
+            window.open("https://open.kakao.com/o/gMTwcQug", "_blank"); // 오픈채팅방 링크 열기
+          }}
           className="mt-4 bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md"
         >
           카카오톡 오픈채팅방 참여하기
