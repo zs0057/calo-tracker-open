@@ -54,24 +54,19 @@ export const resizeImage64 = (
       let width = img.width;
       let height = img.height;
 
-      // 가로 4, 세로 3 비율로 크기 조정
-      if (width / height > 4 / 3) {
-        // 이미지가 이미 가로 4, 세로 3 비율보다 더 넓은 경우
-        height = (width * 3) / 4;
-      } else {
-        // 이미지가 가로 4, 세로 3 비율보다 더 좁거나 같은 경우
-        width = (height * 4) / 3;
-      }
+      // 원본 비율 유지하면서 최대 크기에 맞춰서 조정
+      const aspectRatio = width / height;
 
-      // 최대 크기 제한 적용
-      if (width > maxWidth) {
-        height *= maxWidth / width;
-        width = maxWidth;
-      }
-
-      if (height > maxHeight) {
-        width *= maxHeight / height;
-        height = maxHeight;
+      if (width > maxWidth || height > maxHeight) {
+        if (width / maxWidth > height / maxHeight) {
+          // 너비가 더 크므로 너비를 기준으로 조정
+          width = maxWidth;
+          height = maxWidth / aspectRatio;
+        } else {
+          // 높이를 기준으로 조정
+          height = maxHeight;
+          width = maxHeight * aspectRatio;
+        }
       }
 
       canvas.width = width;
