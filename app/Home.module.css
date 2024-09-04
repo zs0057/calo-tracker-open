@@ -9,7 +9,7 @@
   border-radius: 15px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-
+  margin-top: 20px;
   position: relative;
 }
 .reportButton img {
@@ -190,7 +190,7 @@
   border-radius: 15px;
   resize: none;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  font-size: 18px;
+  font-size: 12px;
 }
 
 .submitButton {

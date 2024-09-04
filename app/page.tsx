@@ -2,7 +2,6 @@
 
 import { ChangeEvent, Suspense, useEffect, useState } from "react";
 import Image from "next/image";
-import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
 import styles from "./Home.module.css";
 import {
   estimateCal,
@@ -14,13 +13,8 @@ import { getMealTypeKorean, resizeImage } from "@/lib/utils";
 import KakaoShareButton from "@/components/KakaoShareButton";
 import { uploadImageToSupabase } from "@/lib/uploadImage";
 import { useRouter, useSearchParams } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
-import useStore from "@/lib/store";
-import { checkAndInsertKakaoEmail } from "@/lib/checkUser";
-import Head from "next/head";
-import MixpanelComponent from "@/components/MixpanelComponent";
 import analytics from "@/lib/analytics";
-import { FaRedoAlt } from "react-icons/fa"; // restart 아이콘 추가
+import { FaRedoAlt, FaComments } from "react-icons/fa"; // restart 아이콘 추가
 
 export default function Home() {
   const [mealType, setMealType] = useState<string>("breakfast");
@@ -196,10 +190,6 @@ export default function Home() {
 
   return (
     <>
-      <header className={styles.header}>
-        <div className={styles.title}>칼로리 측정</div>
-      </header>
-
       <div className={styles.container}>
         {loading && (
           <div className={styles.loadingOverlay}>
@@ -279,7 +269,7 @@ export default function Home() {
             <div className={styles.textareaContainer} data-tour="3">
               <textarea
                 id="textarea" // 텍스트 입력창에 id 추가
-                placeholder="계란 2개, 닭가슴살 100g"
+                placeholder="설명을 자세히 입력하시면 더 정확한 결과를 얻으실 수 있습니다. 예시: 계란 2개, 닭가슴살 100g"
                 className={styles.textarea}
                 value={textarea}
                 onChange={handleTextareaChange}
@@ -338,18 +328,25 @@ export default function Home() {
         )}
       </div>
 
-      <footer className={styles.footer} onClick={handleFooterClick}>
-        <Image
-          src="/banner.gif"
-          alt="Banner"
-          width={290}
-          height={100}
-          className={styles.bannerImage}
-          unoptimized={true}
-        />
-      </footer>
-      <div className="text-center text-gray-400 mt-0.5 text-xs">
-        해당 챌린지에서 챌린저들과 같이 감량해 도전해보세요
+      <div className="bg-yellow-100 p-4 rounded-lg shadow-md text-center">
+        <div className="flex items-center justify-center space-x-2">
+          <FaComments className="text-yellow-500 text-xl" />
+          <span className="text-gray-700 font-semibold">
+            해당 기능을 카카오톡 오픈채팅방에서 같이 해봐요!
+          </span>
+        </div>
+        <p className="text-gray-600 mt-2 text-sm">
+          칼로리 측정 결과를 공유하고 더 건강한 식습관을 함께 만들어가요. 건강
+          정보, 레시피, 운동 팁도 공유할 수 있습니다!
+        </p>
+        <button
+          onClick={() =>
+            window.open("https://open.kakao.com/o/gMTwcQug", "_blank")
+          }
+          className="mt-4 bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md"
+        >
+          카카오톡 오픈채팅방 참여하기
+        </button>
       </div>
     </>
   );
